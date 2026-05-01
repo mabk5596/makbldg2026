@@ -62,7 +62,7 @@
 
 <div id="sidebar">
     <div class="header-container">
-        <h3>Building Directory</h3>
+        <h3>Makkah Hajj Building Directory</h3>
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="Search Building Name or ID..." onkeyup="filterBuildings()">
         </div>
@@ -415,33 +415,31 @@
     const markers = {};
 
     // 3. POPULATE SIDEBAR AND MAP
-    function loadBuildings() {
+function loadBuildings() {
         const listContainer = document.getElementById('buildingList');
         listContainer.innerHTML = '';
 
         buildingData.forEach((item, index) => {
             const buildingId = extractBuildingId(item.name);
-            // Corrected Google Maps Navigation URL
-            const googleNavUrl = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`;
+            const googleNavUrl = `https://www.google.com/maps/search/?api=1&query=${item.lat},${item.lng}`;
             
-            // Marker
+            // Marker - buildingId removed from display
             const marker = L.marker([item.lat, item.lng]).addTo(map);
             marker.bindPopup(`
                 <div class="popup-card">
                     <h3>${item.name}</h3>
                     <p>BRN: ${item.Brn || 'N/A'}</p>
-                    <p>Building ID: ${buildingId}</p>
                     <a href="${googleNavUrl}" target="_blank" class="nav-link-main">Navigate to Building</a>
                 </div>
             `);
             markers[index] = marker;
 
-            // List Item
+            // List Item - buildingId removed from the h4 tag
             const div = document.createElement('div');
             div.className = 'building-item';
             div.innerHTML = `
                 <div class="info-area">
-                    <h4><span class="b-no">BRN: ${item.Brn || 'N/A'}</span><span class="b-no">${buildingId}</span>${item.name}</h4>
+                    <h4><span class="b-no">BRN: ${item.Brn || 'N/A'}</span>${item.name}</h4>
                 </div>
                 <a href="${googleNavUrl}" target="_blank" class="nav-btn-small" onclick="event.stopPropagation();">Navigate</a>
             `;
@@ -453,8 +451,7 @@
             listContainer.appendChild(div);
         });
     }
-
-    // 4. SEARCH FUNCTION
+        // 4. SEARCH FUNCTION
     function filterBuildings() {
         const input = document.getElementById('searchInput').value.toUpperCase();
         const items = document.getElementsByClassName('building-item');
